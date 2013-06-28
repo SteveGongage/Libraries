@@ -254,7 +254,7 @@
 					<div class="debugOutputTitle">Debug Output</div>
 
 					<div class="debugOutputSourceButtons">
-						<cfif arraylen(variables.sources) GT 0>
+						<cfif arraylen(variables.sources) GT 1>
 							<a href="javascript: void(0);" onClick="highlightSource('')" class="debugSourceButton clearButton mute" id="debugSourceClearButton" >Clear</a>
 							
 							<cfset arraySort(variables.sources, 'textNoCase')>
