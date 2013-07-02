@@ -277,6 +277,76 @@
 		<cfreturn colorString>	
 	</cffunction>
 	
+	<!--- ========================================================== --->
+	<!--- Created By: George Demeny 6/1/2013 --->
+	<cffunction name="lightenColor" hint="Lighten a hex color by a percentage">
+		<cfargument name="color">
+		<cfargument name="percent">
+
+		<!--- Adjust percentage --->
+		<cfset arguments.percent = arguments.percent / 100>
+
+		<!--- Get individual color numbers in decimal --->
+		<cfset local.out1 = inputBaseN(mid(arguments.color, 1, 2), 16)>
+		<cfset local.out2 = inputBaseN(mid(arguments.color, 3, 2), 16)>
+		<cfset local.out3 = inputBaseN(mid(arguments.color, 5, 2), 16)>
+
+		<!--- Modify individual color numbers and convert them back to hex --->
+		<cfset local.out1 = formatBaseN(min( round( local.out1 + (255 - local.out1) * arguments.percent ), 255 ), 16)>
+		<cfset local.out2 = formatBaseN(min( round( local.out2 + (255 - local.out2) * arguments.percent ), 255 ), 16)>
+		<cfset local.out3 = formatBaseN(min( round( local.out3 + (255 - local.out3) * arguments.percent ), 255 ), 16)>
+
+		<!--- Make sure each hex number is zero padded to two characters --->
+		<cfif len(local.out1) eq 1>
+			<cfset local.out1 = "0#local.out1#">
+		</cfif>
+		<cfif len(local.out2) eq 1>
+			<cfset local.out2 = "0#local.out2#">
+		</cfif>
+		<cfif len(local.out3) eq 1>
+			<cfset local.out3 = "0#local.out3#">
+		</cfif>
+
+		<!--- Return new hex color --->
+		<cfreturn "#local.out1##local.out2##local.out3#">
+
+	</cffunction>
+
+
+	<!--- ========================================================== --->
+	<!--- Created By: George Demeny 6/1/2013 --->
+	<cffunction name="darkenColor" hint="Darken a hex color by a percentage">
+		<cfargument name="color">
+		<cfargument name="percent">
+
+		<!--- Adjust percentage --->
+		<cfset arguments.percent = arguments.percent / 100>
+
+		<!--- Get individual color numbers in decimal --->
+		<cfset local.out1 = inputBaseN(mid(arguments.color, 1, 2), 16)>
+		<cfset local.out2 = inputBaseN(mid(arguments.color, 3, 2), 16)>
+		<cfset local.out3 = inputBaseN(mid(arguments.color, 5, 2), 16)>
+
+		<!--- Modify individual color numbers and convert them back to hex --->
+		<cfset local.out1 = formatBaseN(max( round( local.out1 * (1 - arguments.percent) ), 0 ), 16)>
+		<cfset local.out2 = formatBaseN(max( round( local.out2 * (1 - arguments.percent) ), 0 ), 16)>
+		<cfset local.out3 = formatBaseN(max( round( local.out3 * (1 - arguments.percent) ), 0 ), 16)>
+
+		<!--- Make sure each hex number is zero padded to two characters --->
+		<cfif len(local.out1) eq 1>
+			<cfset local.out1 = "0#local.out1#">
+		</cfif>
+		<cfif len(local.out2) eq 1>
+			<cfset local.out2 = "0#local.out2#">
+		</cfif>
+		<cfif len(local.out3) eq 1>
+			<cfset local.out3 = "0#local.out3#">
+		</cfif>
+
+		<!--- Return new hex color --->
+		<cfreturn "#local.out1##local.out2##local.out3#">
+
+	</cffunction>
 
 	
 	<!--- ========================================================== --->
