@@ -1,11 +1,39 @@
 <!--- =========================================================================================================
-	Created:		Steve Gongage (4/25/2013)
-	Purpose:		Data dump utilities library 
+	Created:		Steve Gongage (7/14/2012)
+	Purpose:		Developer tools for outputting data during testing and debugging.  Required by the LibraryCollection.
 
 	Usage:			included in the default utilities library
 
 ========================================================================================================= --->
-<cfcomponent extends="cf.Gongage.utilities.LibraryBase">
+<cfcomponent hint="Developer tools for outputting data during testing and debugging.  Required by the LibraryCollection.">
+
+
+	<cfset variables.stylesheet = "">
+	<cfsavecontent variable="variables.stylesheet">
+	<cfoutput>
+		<style>
+			TABLE.gDumpTable { border-spacing: 2px; border-collapse: separate; font-size: 10px; width: 800px; font-family: Verdana, Geneva, sans-serif; }
+				.gDumpTable TABLE {border-spacing: 2px; border-collapse: separate; font-size: 10px; width:  100%;}
+				.gDumpTable OL LI { list-style-type: none; }
+				.gDumpTable .helpHint { font-style: italic; padding: .5em; }
+				.gDumpTable .helpFunctionGroup 	{ font-weight: normal; font-size: 11px; }
+				.gDumpTable .helpFunctionAccess	{ font-weight: normal; font-style: italic;}
+
+				.gDumpTable TD,
+				.gDumpTable TH { background-color: ##EEDDFF; vertical-align: top; padding: 4px;}
+				.gDumpTable > TBODY > TR > TD:first-child { background-color: ##BBAAEE; text-align: right; width: 120px; font-weight: bold;}
+					.gDumpTable > TBODY > TR > TD:first-child > A { text-decoration: none; color: ##03A; }
+
+				.gDumpTable > THEAD > TR > TH { text-align: left; padding-left: 1em; background-color: ##538; color: white; }
+				.gDumpTable > THEAD > TR > TH  H3 { font-weight: bold; font-size: 17px; float: left; margin: 0px; line-height: 1.5em; }
+				.gDumpTable > THEAD > TR > TH  .right {  float: right; text-align: right; }
+				.gDumpTable > THEAD > TR > TH  H4 { font-style: italic; font-weight: bold; font-size: 11px;  margin: 0px; line-height: 1.2em; }
+				.gDumpTable > THEAD > TR > TH  H5 { font-style: italic; font-weight: normal;font-size: 11px; margin: 0px; line-height: 1.2em; }
+		</style>
+	</cfoutput>
+	</cfsavecontent>
+
+
 
 	<!---============================================================================================== --->
 	<cffunction name="component"  group="Objects" hint="Helpful documentation for any component.">
@@ -43,31 +71,20 @@
 
 		<cfsavecontent variable="output">
 		<cfoutput>
+			<!--- Output Common Styles --->
+			#outputStyles('purple')#
+
 			<style>
-				TABLE.helpComponentTable { border-spacing: 2px; border-collapse: separate; font-size: 10px; width: 800px; font-family: Verdana, Geneva, sans-serif; }
-					.helpComponentTable TABLE {border-spacing: 2px; border-collapse: separate; font-size: 10px; width:  100%;}
-					.helpComponentTable OL LI { list-style-type: none; }
-					.helpComponentTable .helpHint { font-style: italic; padding: .5em; }
-					.helpComponentTable .helpFunctionGroup 	{ font-weight: normal; font-size: 11px; }
-					.helpComponentTable .helpFunctionAccess	{ font-weight: normal; font-style: italic;}
-
-					.helpComponentTable TD,
-					.helpComponentTable TH { background-color: ##EEDDFF; vertical-align: top; padding: 4px;}
-					.helpComponentTable TD.helpLabel,
-					.helpComponentTable TH.helpLabel { background-color: ##BBAAEE; text-align: right; width: 120px;}
-
 					TABLE.helpFunctionTable { }
 						.helpFunctionTable TD,
 						.helpFunctionTable TH { background-color: ##FFFFEE; }
-						.helpFunctionTable TD.helpLabel,
-						.helpFunctionTable TH.helpLabel { background-color: ##FFFFCC; width: 150px; }
+						.helpFunctionTable > TBODY > TR > TD:first-child { background-color: ##FFFFCC; width: 150px; }
 						.helpFunctionTable .helpFunctionName 	{ font-weight: bold; }
 
 						TABLE.helpParamTable { }
 							.helpParamTable TD,
 							.helpParamTable TH { background-color: ##EEF8FF; }
-							.helpParamTable TD.helpLabel,
-							.helpParamTable TH.helpLabel { background-color: ##CCDDFF; width: 120px; text-align: right; }
+							.helpParamTable > TBODY > TR > TD:first-child { background-color: ##CCDDFF; width: 120px; text-align: right; }
 							.helpParamTable TR.required TD,
 							.helpParamTable TR.required TH { font-weight: bold; }
 							.helpParamTable TR.required TD.helpParamDefault { color: ##C88; }
@@ -76,21 +93,24 @@
 			</style>
 
 			<!--- COMPONENT table --->
-			<table class="helpComponentTable">
+			<table class="gDumpTable">
 				<!--- Component Basic Information --->
-				<tr>
-					<td colspan="2" class="helpLabel" style="text-align: left; padding-left: 1em; background-color: ##538; color: white;">
-						<div style="font-weight: bold; font-size: 17px; float: left;">#LOCAL.compName#</div>
-						<div style=" float: right; text-align: right;">
-							<div style="font-style: italic; font-weight: bold;">#libMeta.fullName#</div>
-							<cfif structKeyExists(libMeta, 'extends')>
-								<div style="font-style: italic; font-weight: normal;">extends #libMeta.extends.fullName#</div>
-							</cfif>
+				<thead>
+					<tr>
+						<th colspan="2">
+							<h3>#LOCAL.compName#</h3>
 
-						</div>
-						<div style="clear: both;"></div>
-					</td>
-				</tr>
+							<div class="right">
+								<h4>#libMeta.fullName#</h4>
+								<cfif structKeyExists(libMeta, 'extends') AND libMeta.extends.fullName IS NOT "WEB-INF.cftags.component">
+									<h5>extends: #libMeta.extends.fullName#</h5>
+								</cfif>
+
+							</div>
+							<div style="clear: both;"></div>
+						</th>
+					</tr>
+				</thead>
 
 				<cfif libMeta.hint IS NOT "">
 					<tr>
@@ -120,7 +140,7 @@
 						<cfif currTypeAccess IS currAccess>
 							
 							<tr>
-								<td class="helpLabel">
+								<td>
 									<div class="helpFunctionGroup">
 										<cfif currTypeGroup IS "">
 											UNGROUPED
@@ -146,7 +166,7 @@
 
 											<cfif currFunction.access IS currAccess AND currFunction.group IS currTypeGroup>
 												<tr>
-													<td class="helpLabel">
+													<td>
 														<div class="helpFunctionName">#currFunction.name#</div>
 													</td>
 													<td>
@@ -167,7 +187,7 @@
 																	}, false)>
 
 																	<tr <cfif currParam.required> class="required" </cfif>>
-																		<td class="helpLabel">
+																		<td>
 																			#currParam.name#
 																		</td>
 																		<td class="helpParamType">
@@ -210,8 +230,183 @@
 
 	</cffunction>
 
+
+	<!---============================================================================================== --->
+	<cffunction name="table" group="Database" hint="Dumb a database table (not including data)">
+		<cfargument name="dsn"		 	type="string" required="true">
+		<cfargument name="tableName" 	type="string" required="true">
+
+		<cfset var output = "">
+		<cfset var fields = "">
+
+		<cfdbinfo datasource="#arguments.dsn#" type="columns" name="cols" table="#arguments.tableName#">
+
+		<cfsavecontent variable="output">
+		<cfoutput>
+
+			<!--- Output Common Styles --->
+			#outputStyles('purple')#
+
+			<table class="gDumpTable">
+				<thead>
+					<tr>
+						<th colspan="3">
+							<h3>#arguments.tableName#</h3>
+
+							<div class="right">
+								<h4>#arguments.dsn#.#arguments.tableName#</h4>
+							</div>
+							<div style="clear: both;"></div>
+						</th>
+					</tr>
+				</thead>
+				<cfloop query="cols">
+					<tr>
+						<td>#cols.column_name#</td>
+						<td style="width: 80px;">#replaceNOCASE(cols.type_name, 'identity', '')# (#cols.column_size#)</td>
+						<td>
+							<cfif cols.is_Nullable>
+								<span class="label">Nullable</span>
+							</cfif>
+							<cfif cols.is_primaryKey>
+								<span class="label">Primary Key</span>
+							</cfif>
+							<cfif cols.type_name CONTAINS 'identity'>
+								<span class="label">Identity</span>
+							</cfif>
+						</td>
+					</tr>
+				</cfloop>
+
+			</table>
+			
+		</cfoutput>
+		</cfsavecontent>
+
+
+		<cfreturn output>
+	</cffunction>
+
+
+	<!---============================================================================================== --->
+	<cffunction name="subcomponents" group="Objects" hint="Shows details of a sub component of a component">
+		<cfargument name="library" type="component" required="true">
+		<cfset var output = "">
+		<cfset var compList = listSort(structKeyList(arguments.library), 'textNoCase')>
+
+		<cfset var currMeta = getMetaData(arguments.library)>
+
+		<cfsavecontent variable="output">
+		<cfoutput>
+			<!--- Output Common Styles --->
+			#outputStyles('purple')#
+
+			<script>
+				function toggleSubComponent(name, link) {
+					var allCompDivs = document.getElementsByClassName('gDumpSubComponent');
+					var targetDiv = document.getElementById('gDumpSubComponent_'+ name);
+
+					
+
+					for each(comp in allCompDivs) {	
+						if (typeof(comp.style) != 'undefined' && comp != targetDiv ) {
+							comp.style.display = 'none';
+						}
+					}
+
+					if (targetDiv.style.display == 'block') {
+						targetDiv.style.display = 'none';
+					} else {
+						targetDiv.style.display = 'block';
+					}
+					
+				}
+			</script>
+
+			<table class="gDumpTable">
+				<thead>
+					<tr>
+						<th colspan="2">
+							<h3>#listLast(currMeta.name, '.')#</h3>
+
+							<div class="right">
+								<h4>#currMeta.fullName#</h4>
+								<cfif structKeyExists(currMeta, 'extends')>
+									<h5>extends: #currMeta.extends.fullName#</h5>
+								</cfif>
+
+							</div>
+							<div style="clear: both;"></div>
+						</th>
+					</tr>
+				</thead>
+
+				<cfloop list="#compList#" index="currKey">
+					<cfif isObject(arguments.library[currKey])>
+						<tr>
+							<td style="text-align: right;"><a href="##gDumpSubComponent" onclick="toggleSubComponent('#currKey#', this);">#uCase(currKey)#</a></td>
+							<td>		
+								<cfset meta = getMetaData(arguments.library[currKey])>
+								<cfif structKeyExists(meta, 'hint')>
+									#meta.hint#
+								</cfif>
+							</td>
+						</tr>
+					</cfif>
+		
+				</cfloop>
+			</table>
+
+			<a name="gDumpSubComponent"></a>
+			<cfloop list="#compList#" index="currKey">
+				<cfif isObject(arguments.library[currKey])>
+					<!-- dump of subcomponent #currKey# -->
+					<div id="gDumpSubComponent_#currKey#" style="display: none;" class="gDumpSubComponent">
+						#component(arguments.library[currKey])#
+					</div>
+				</cfif>
+			</cfloop>
+
+
+		</cfoutput>
+		</cfsavecontent>
+
+		<cfreturn output>
+	</cffunction>
+
+
 	<!--- ============================================================================================= --->
-	<cffunction name="charMap" hint="Outputs a table mapping each character in a string to it's ascii value.">
+	<cffunction name="outputStyles" group="Private" hint="Outputs base styles for internal methods.  Not intended for public use..." access="private">
+		<cfset var output = "">
+		<cfsavecontent variable="output">
+		<cfoutput>
+			<style>
+				TABLE.gDumpTable { border-spacing: 2px; border-collapse: separate; font-size: 10px; width: 800px; font-family: Verdana, Geneva, sans-serif; }
+					.gDumpTable TABLE {border-spacing: 2px; border-collapse: separate; font-size: 10px; width:  100%;}
+					.gDumpTable OL LI { list-style-type: none; }
+					.gDumpTable .helpHint { font-style: italic; padding: .5em; }
+					.gDumpTable .helpFunctionGroup 	{ font-weight: normal; font-size: 11px; }
+					.gDumpTable .helpFunctionAccess	{ font-weight: normal; font-style: italic;}
+
+					.gDumpTable TD,
+					.gDumpTable TH { background-color: ##EEDDFF; vertical-align: top; padding: 4px;}
+					.gDumpTable > TBODY > TR > TD:first-child { background-color: ##BBAAEE; text-align: right; width: 120px; font-weight: bold;}
+						.gDumpTable > TBODY > TR > TD:first-child > A { text-decoration: none; color: ##03A; }
+
+					.gDumpTable > THEAD > TR > TH { text-align: left; padding-left: 1em; background-color: ##538; color: white; }
+					.gDumpTable > THEAD > TR > TH  H3 { font-weight: bold; font-size: 17px; float: left; margin: 0px; line-height: 1.5em; }
+					.gDumpTable > THEAD > TR > TH  .right {  float: right; text-align: right; }
+					.gDumpTable > THEAD > TR > TH  H4 { font-style: italic; font-weight: bold; font-size: 11px;  margin: 0px; line-height: 1.2em; }
+					.gDumpTable > THEAD > TR > TH  H5 { font-style: italic; font-weight: normal;font-size: 11px; margin: 0px; line-height: 1.2em; }
+			</style>
+
+		</cfoutput>
+		</cfsavecontent>
+		<cfreturn output>
+	</cffunction>
+
+	<!--- ============================================================================================= --->
+	<cffunction name="charMap" group="Strings" hint="Outputs a table mapping each character in a string to it's ascii value.">
 		<cfargument name="stringIn" type="string">
 		
 		<cfset var i = 0>

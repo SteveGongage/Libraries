@@ -138,19 +138,22 @@
 		
 
 		<cfif NOT structKeyExists(this, arguments.utilityName)>
-			<cfif arguments.utilityName IS NOT "">
-				<cfset output = "Could not find a library with the name '#arguments.utilityName#'.">
-			</cfif>
-	
-			<cfset output &= "  Please choose from the following">
+			<cfsavecontent variable="output">
+			<cfoutput>
 
-			<cfloop collection="#this#" item="currKey">
-				<cfif isObject(this[currKey])>
-					<cfset output = listAppend(output, ' "#currKey#"')>
+				<cfif arguments.utilityName IS NOT "">
+					<div>Could not find a library with the name '#arguments.utilityName#</div>
 				</cfif>
-	
-			</cfloop>
+			
+				<div>Please use one of the following as an argument for CollectionBase.help()</div>
 
+				<!--- Dump the subcomponents of this library --->
+				#this.dump.subcomponents(this)#
+
+
+			</cfoutput>
+			</cfsavecontent>
+	
 			
 		<cfelse>
 			<cfset var targetUtil = this[arguments.utilityName]>
