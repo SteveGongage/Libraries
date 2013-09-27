@@ -10,10 +10,10 @@ var ListInputControl = (
 		
 		//----------------------------------------
 		// Other variables.  Do not change these.
-		var items 		= {};
-		var lastItemID 	= -1;
-		var fields 		= {					
-			input 			: null
+		var items			= {};
+		var lastItemID		= -1;
+		var fields			= {					
+			input		: null
 			, hiddenOutput	: null
 			, displayOutput	: null
 		};
@@ -54,9 +54,7 @@ var ListInputControl = (
 			if (!isAlreadyInList && listItem.text != '') {
 				
 				outputListItem(listItem, this);
-				
 				items[listItem.itemID] = listItem; // Save this item in memory
-				
 				updateListInput();
 
 			}
@@ -72,10 +70,8 @@ var ListInputControl = (
 
 			if (items[itemID]) {
 				jQuery(items[itemID].domObj).remove();
-
 				delete items[itemID];
 			}
-
 
 			updateListInput();
 		};
@@ -83,11 +79,10 @@ var ListInputControl = (
 		// ------------------------------------------------------------
 		// Private: outputListItem
 		var outputListItem = function (listItem, thisObj) {
-			listItem.domObj 			= document.createElement('li');
-			listItem.domObj.id 			= listItem.itemID;
+			listItem.domObj 		= document.createElement('li');
+			listItem.domObj.id 		= listItem.itemID;
 			listItem.domObj.innerHTML 	= '<a href="javascript: void(0);" class="btn">'+ closeHTML + listItem.label +'</a>';
 			listItem.domObj.onclick 	= (function(obj, listItem) { 
-
 				return function() { 
 					obj.removeFromList(listItem.itemID);
 				}
@@ -122,7 +117,7 @@ var ListInputControl = (
 			this.removeFromList = removeFromList;
 
 			fields = {				
-				input 			: jQuery('#'+ namePrefix +'_input')[0]
+				input		: jQuery('#'+ namePrefix +'_input')[0]
 				, hiddenOutput	: jQuery('#'+ namePrefix)[0]
 				, displayOutput	: jQuery('#'+ namePrefix +'_tagOutput')[0]
 			}
