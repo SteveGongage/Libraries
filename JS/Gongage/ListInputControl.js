@@ -1,10 +1,17 @@
+// ***********************************************************************************
+// Purpose: 	Provides a simple way of adding values to a list using a text input
+//			 	and storing the values in a hidden field as well as displaying a 
+//				list of items to the user.
+// Created By:	Steve Gongage (6/1/2013)
+// Usage:		var myListControl = new ListInputControl('myPrefix');
+//
+// ***********************************************************************************
 
-// *****************************************************************************
-// Purpose: 
+
 var ListInputControl = (
 	function () {		
 		//++++++++++++++++++++++++++++++++++++++++
-		// Modify these to customize this control 
+		// Modify these variables to customize this control 
 		var closeHTML	= '<span class="close">&times;</span>';
 		
 		
@@ -13,7 +20,7 @@ var ListInputControl = (
 		var items			= {};
 		var lastItemID		= -1;
 		var fields			= {					
-			input		: null
+			input			: null
 			, hiddenOutput	: null
 			, displayOutput	: null
 		};
@@ -79,8 +86,8 @@ var ListInputControl = (
 		// ------------------------------------------------------------
 		// Private: outputListItem
 		var outputListItem = function (listItem, thisObj) {
-			listItem.domObj 		= document.createElement('li');
-			listItem.domObj.id 		= listItem.itemID;
+			listItem.domObj 			= document.createElement('li');
+			listItem.domObj.id 			= listItem.itemID;
 			listItem.domObj.innerHTML 	= '<a href="javascript: void(0);" class="btn">'+ closeHTML + listItem.label +'</a>';
 			listItem.domObj.onclick 	= (function(obj, listItem) { 
 				return function() { 
@@ -117,7 +124,7 @@ var ListInputControl = (
 			this.removeFromList = removeFromList;
 
 			fields = {				
-				input		: jQuery('#'+ namePrefix +'_input')[0]
+				input			: jQuery('#'+ namePrefix +'_input')[0]
 				, hiddenOutput	: jQuery('#'+ namePrefix)[0]
 				, displayOutput	: jQuery('#'+ namePrefix +'_tagOutput')[0]
 			}
